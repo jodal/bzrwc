@@ -1,0 +1,31 @@
+{% extends "bzrwc/base.html" %}
+
+{% block header %}
+    {{ block.super }}:
+    <a href="{% url repository-list-user object.owner.username %}">
+        {{ object.owner }}</a>:
+    {{ object.name }}
+{% endblock %}
+
+
+{% block content %}
+
+{% if charts %}
+<p>
+    Unit:
+    {% for key, value in charts.0.CHART_UNIT_CHOICES %}
+        <a href="?unit={{ key }}">{{ value }}</a>
+    {% endfor %}
+</p>
+
+{% for chart in charts %}
+<div id="chart-{{ object.owner }}-{{ object.slug }}-{{ chart.slug }}">
+<img src="{{ chart.image_url }}" alt="{{ chart.name }}" />
+{# <pre class="url">{{ chart.image_url }}</pre> #}
+</div>
+{% endfor %}
+{% else %}
+<p>No charts found.</p>
+{% endif %}
+
+{% endblock %}

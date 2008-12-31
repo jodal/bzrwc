@@ -1,0 +1,29 @@
+{% extends "bzrwc/base.html" %}
+
+{% block header %}
+    {{ block.super }}:
+    Repositories
+{% endblock %}
+
+
+{% block content %}
+
+{% if object_list %}
+<ul>
+    {% for user in object_list %}
+    <li><a href="{% url repository-list-user user.username %}">{{ user.username }}</a>
+        {% if user.repository_set.all %}
+        <ul>
+            {% for repo in user.repository_set.all %}
+            <li><a href="{% url repository-details user.username,repo.slug %}">{{ repo.name }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No repositories found.</p>
+{% endif %}
+
+{% endblock %}

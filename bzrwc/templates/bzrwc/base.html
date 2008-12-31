@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+    <title>bzrwc</title>
+    <style type="text/css">
+        body {
+            font-family: sans-serif;
+        }
+        a {
+            background: transparent;
+            color: black;
+        }
+        a:hover {
+            color: #f90;
+        }
+        img {
+            border: 2px solid #bbb;
+            padding: 0.5em;
+        }
+        .url {
+            background: #eee;
+            height: 3em;
+            overflow: scroll;
+            padding: 0.5em;
+            width: 800px;
+        }
+        #footer {
+            border-top: 2px solid #bbb;
+            font-size: small;
+            padding: 0.3em 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>{% block header %}<a href="{% url repository-list %}">bzrwc</a>{% endblock %}</h1>
+
+{% block content %}{% endblock %}
+
+<p id="footer">bzrwc by Stein Magnus Jodal</p>
+
+</body>
+
+</html>
