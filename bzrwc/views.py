@@ -1,11 +1,7 @@
 from django.contrib.auth.models import User
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render_to_response
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404
 from django.views.generic.list_detail import object_list, object_detail
-
-from datetime import datetime, timedelta
-from pygooglechart import XYLineChart, Axis
 
 from bzrwc.bzrstats import get_bzr_stats
 from bzrwc.gchart import get_gchart

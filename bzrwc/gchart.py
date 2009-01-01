@@ -1,4 +1,3 @@
-from datetime import datetime
 import locale
 from pygooglechart import XYLineChart, Axis
 
@@ -33,7 +32,8 @@ def get_gchart(chart, unit):
     days_max = chart.get_number_of_days()
     days_data = []
     curve_max = eval('chart.get_max_num_%s()' % unit_name)
-    if curve_max == 0: curve_max = 1
+    if curve_max == 0:
+        curve_max = 1
     curve_data = []
     for rev in chart.revision_set.all():
         # Time/date data

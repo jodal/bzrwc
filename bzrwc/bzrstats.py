@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import bzrlib.branch
 import bzrlib.errors
 import re
@@ -7,7 +7,6 @@ from bzrwc.models import Revision
 
 def get_bzr_stats(chart):
     stats = []
-    summary = {}
     if chart.filter:
         filter = re.compile(chart.filter)
     else:
