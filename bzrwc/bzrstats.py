@@ -19,8 +19,11 @@ def get_bzr_stats(chart):
         branch = bzrlib.branch.Branch.open(chart.repository.url)
     except bzrlib.errors.NotBranchError:
         return # Just use cached data
+
+    know_revisions = set(chart.revision_set.values_list('revision_id', flat=True))
+
     for rev_id in branch.revision_history():
-        if chart.revision_set.filter(revision_id=rev_id).count():
+        if rev_id in know_revisions:
             continue # Revision is cached
 
         num_lines, num_words, num_chars, num_bytes = 0, 0, 0, 0
