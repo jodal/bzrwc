@@ -35,10 +35,10 @@ def get_bzr_stats(chart):
             file_id = file[3]
 
             # Skip file if matching exclude
-            if exclude is not None and re.match(exclude, file_name) is not None:
+            if exclude is not None and re.search(exclude, file_name):
                 continue
             # Skip file if not matching filter
-            if filter is not None and re.match(filter, file_name) is None:
+            if filter is not None and not re.search(filter, file_name):
                 continue
 
             revtree.lock_read()
