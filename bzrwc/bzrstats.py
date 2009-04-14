@@ -6,7 +6,6 @@ import re
 from bzrwc.models import Revision
 
 def get_bzr_stats(chart):
-    stats = []
     if chart.filter:
         filter = re.compile(chart.filter)
     else:
@@ -50,15 +49,7 @@ def get_bzr_stats(chart):
             bytes = revtree.get_file_size(file_id)
             if bytes is not None:
                 num_bytes += bytes
-        stats.append({
-            'rev_id': rev_id,
-            'rev_no': rev_no,
-            'timestamp': timestamp,
-            'num_lines': num_lines,
-            'num_words': num_words,
-            'num_chars': num_chars,
-            'num_bytes': num_bytes,
-        })
+
         revision = Revision(
             revision_id=rev_id,
             revision_no=rev_no,
