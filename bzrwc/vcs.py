@@ -22,7 +22,13 @@ class Revision(object):
     def __init__(self, branch, rev_id):
         self.branch = branch
         self.rev_id = rev_id
-        self.revtree = branch.repository.revision_tree(rev_id)
+        self._revtree = None
+
+    @property
+    def revtree(self):
+        if not self._revtree:
+            self._revtree = self.branch.repository.revision_tree(self.rev_id)
+        return self._revtree
 
     @property
     def id(self):
