@@ -1,4 +1,5 @@
 from datetime import datetime
+
 import bzrlib.branch
 import bzrlib.errors
 
@@ -34,7 +35,7 @@ class Revision(object):
     @property
     def timestamp(self):
         rev = self.branch.repository.get_revision(self.id)
-        return datetime.fromtimestamp(rev.timestamp+rev.timezone)
+        return datetime.utcfromtimestamp(rev.timestamp+rev.timezone)
 
     @property
     def author(self):
