@@ -34,7 +34,7 @@ class Revision(object):
     @property
     def timestamp(self):
         rev = self.branch.repository.get_revision(self.id)
-        return datetime.fromtimestamp(rev.timestamp)
+        return datetime.fromtimestamp(rev.timestamp+rev.timezone)
 
     @property
     def files(self):
