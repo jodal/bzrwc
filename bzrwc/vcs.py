@@ -37,6 +37,11 @@ class Revision(object):
         return datetime.fromtimestamp(rev.timestamp+rev.timezone)
 
     @property
+    def author(self):
+        rev = self.branch.repository.get_revision(self.id)
+        return rev.get_apparent_author()
+
+    @property
     def files(self):
         for file in self.revtree.list_files():
             file_name = file[0]
