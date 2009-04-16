@@ -29,22 +29,13 @@ class Revision(object):
         self.prev_id = prev_id
         self._revtree = None
         self._prev_revtree = None
-
-        self._diffstat_run = False
-        self._additions = 0
-        self._deletions = 0
+        self._stats = None
 
     @property
     def revtree(self):
         if not self._revtree:
-            self._revtree = self.branch.repository.revision_tree(self.rev_id)
+            self._revtree = self._get_revtree(self.rev_id)
         return self._revtree
-
-    @property
-    def prev_revtree(self):
-        if not self._prev_revtree:
-            self._prev_revtree = self.branch.repository.revision_tree(self.prev_id)
-        return self._prev_revtree
 
     @property
     def id(self):
@@ -73,26 +64,18 @@ class Revision(object):
             yield File(self.revtree, file_name, file_id)
 
     @property
-    def additions(self):
-        if not self._diffstat_run:
-            self._diffstat()
+    def stats(self):
+        if not self._stats:
+            s = DiffStat()
+            prev_revtree = self._get_revtree(self.prev_id)
+            show_diff_trees(prev_revtree, self.revtree, s)
 
-        return self._additions
+            self._stats = s
 
-    @property
-    def deletions(self):
-        if not self._diffstat_run:
-            self._diffstat()
+        return self._stats
 
-        return self._deletions
-
-    def _diffstat(self):
-        s = DiffStat()
-        show_diff_trees(self.prev_revtree, self.revtree, s)
-
-        self._additions = s.additions
-        self._deletions = s.deletions
-        self._diffstat_run = True
+    def _get_revtree(self, rev_id):
+        return self.branch.repository.revision_tree(rev_id)
 
 class File(object):
     def __init__(self, revtree, file_name, file_id):
@@ -129,12 +112,14 @@ class File(object):
         return lines
 
 class DiffStat:
+    file_re = re.compile(r'---')
     addition_re = re.compile(r'^\+[^+]')
-    deletion_re = re.compile(r'^\-[^-]')
+    deletion_re = re.compile(r'^-[^-]')
 
     def __init__(self):
         self.additions = 0
         self.deletions = 0
+        self.changed_files = 0
 
     def write(self, diff_string):
         for line in diff_string.split('\n'):
@@ -142,5 +127,5 @@ class DiffStat:
                 self.additions += 1
             elif re.search(self.deletion_re, line):
                 self.deletions += 1
-
-        print diff_string
+            elif re.search(self.file_re, line):
+                self.changed_files += 1
