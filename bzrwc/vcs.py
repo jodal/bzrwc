@@ -6,10 +6,15 @@ from bzrlib.diff import show_diff_trees
 
 class Branch(object):
     def __init__(self, url):
+        self.url = url
+
         try:
             self.branch = bzrlib.branch.Branch.open(url)
         except bzrlib.errors.NotBranchError:
             self.branch = None
+
+    def __repr__(self):
+        return "<%s.%s object '%s'>" % (self.__class__.__module__, self.__class__.__name__, self.url)
 
     def __bool__(self):
         return bool(getattr(self, 'branch', False))
@@ -29,6 +34,9 @@ class Revision(object):
         self._revtree = None
         self._prev_revtree = None
         self._stats = None
+
+    def __repr__(self):
+        return "<%s.%s object '%s'>" % (self.__class__.__module__, self.__class__.__name__, self.id)
 
     @property
     def revtree(self):
@@ -87,6 +95,9 @@ class File(object):
         self.file_id = file_id
 
         self.count()
+
+    def __repr__(self):
+        return "<%s.%s object '%s'>" % (self.__class__.__module__, self.__class__.__name__, self.name)
 
     @property
     def bytes(self):
