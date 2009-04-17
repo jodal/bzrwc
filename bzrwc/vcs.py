@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import re
 import bzrlib.branch
 import bzrlib.errors
 from bzrlib.diff import show_diff_trees
@@ -112,10 +111,6 @@ class File(object):
         return lines
 
 class DiffStat:
-    file_re = re.compile(r'---')
-    addition_re = re.compile(r'^\+[^+]')
-    deletion_re = re.compile(r'^-[^-]')
-
     def __init__(self):
         self.additions = 0
         self.deletions = 0
@@ -123,9 +118,9 @@ class DiffStat:
 
     def write(self, diff_string):
         for line in diff_string.split('\n'):
-            if re.search(self.addition_re, line):
+            if line.startswith('+') and not line.startswith('+++'):
                 self.additions += 1
-            elif re.search(self.deletion_re, line):
+            if line.startswith('-') and not line.startswith('---'):
                 self.deletions += 1
-            elif re.search(self.file_re, line):
+            elif line.startswith('---'):
                 self.changed_files += 1
