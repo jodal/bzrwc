@@ -1,31 +1,29 @@
 {% extends "bzrwc/base.html" %}
 
 {% block header %}
-    {{ block.super }}:
-    <a href="{% url repository-list-user object.owner.username %}">
-        {{ object.owner }}</a>:
-    {{ object.name }}
+  {{ block.super }} &ndash;
+  <a href="{% url repository-list-user object.owner.username %}">
+    {{ object.owner }}</a>
+  &ndash;
+  {{ object.name }}
 {% endblock %}
 
 
 {% block content %}
-
-{% if charts %}
-<p>
-    Unit:
-    {% for key, value in charts.0.CHART_UNIT_CHOICES %}
+  {% if not charts %}
+    <p>No charts found.</p>
+  {% else %}
+    <p id="units">
+      Unit:
+      {% for key, value in charts.0.CHART_UNIT_CHOICES %}
         <a href="?unit={{ key }}">{{ value }}</a>
-    {% endfor %}
-</p>
+      {% endfor %}
+    </p>
 
-{% for chart in charts %}
-<div id="chart-{{ object.owner }}-{{ object.slug }}-{{ chart.slug }}">
-<img src="{{ chart.image_url }}" alt="{{ chart.name }}" />
-{# <pre class="url">{{ chart.image_url }}</pre> #}
-</div>
-{% endfor %}
-{% else %}
-<p>No charts found.</p>
-{% endif %}
-
+    <div id="charts">
+      {% for chart in charts %}
+        <img id="chart-{{ object.owner }}-{{ object.slug }}-{{ chart.slug }}" class="chart" src="{% url chart object.owner.username,object.slug,chart.slug %}{% if unit %}?unit={{ unit }}{% endif %}" alt="{{ chart.name }}" />
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endblock %}
