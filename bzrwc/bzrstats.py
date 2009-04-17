@@ -16,14 +16,18 @@ def get_bzr_stats(chart):
         not re.search(exclude_re, file.name))
 
     know_revisions = set(chart.revision_set.values_list('revision_id', flat=True))
+    revisions = []
 
-    for rev in branch.history:
+    for i, rev in enumerate(branch.history):
         if rev.id in know_revisions:
             continue
 
         revision = get_revision_stats(rev, file_filter)
-        chart.revision_set.add(revision)
+        revision.num_revisions = i
 
+        revisions.append(revision)
+
+    chart.revision_set.add(*revisions)
 
 def get_revision_stats(rev, filter_function):
     num_lines, num_words, num_chars, num_bytes = 0, 0, 0, 0
