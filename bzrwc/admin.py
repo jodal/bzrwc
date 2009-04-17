@@ -8,7 +8,7 @@ class ChartInline(admin.TabularInline):
 
 class RepositoryAdmin(admin.ModelAdmin):
     inlines = [ChartInline]
-    list_display = ('owner', 'name', 'slug', 'url')
+    list_display = ('name', 'owner', 'slug', 'url')
     list_filter = ('owner',)
     ordering = ('owner', 'name',)
     prepopulated_fields = {
