@@ -71,6 +71,13 @@ class Chart(models.Model):
     def get_max_num_bytes(self):
         return self.revision_set.all().order_by('-num_bytes')[0].num_bytes
 
+    def get_max_num(self, key):
+        if key in Chart.CHART_UNIT_DICT:
+            unit = Chart.CHART_UNIT_DICT[key].lower()
+            return eval('self.get_max_num_%s()' % unit)
+        else:
+            return self.get_max_num_lines()
+
 class Revision(models.Model):
     chart = models.ForeignKey(Chart)
     revision_id = models.CharField(max_length=100)
@@ -86,3 +93,11 @@ class Revision(models.Model):
 
     def __unicode__(self):
         return u'%s: r%s' % (self.chart, self.revision_no)
+
+    def get_num(self, key):
+        if key in Chart.CHART_UNIT_DICT:
+            unit = Chart.CHART_UNIT_DICT[key].lower()
+            return eval('self.num_%s' % unit)
+        else:
+            return self.num_lines
+        
