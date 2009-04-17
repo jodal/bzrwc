@@ -31,15 +31,15 @@
     }
   </style>
 </head>
-
 <body>
+  <h1>
+    {% block header %}
+      <a href="{% url repository-list %}">bzrwc</a>
+    {% endblock %}
+  </h1>
 
-<h1>{% block header %}<a href="{% url repository-list %}">bzrwc</a>{% endblock %}</h1>
+  {% block content %}{% endblock %}
 
-{% block content %}{% endblock %}
-
-<p id="footer">bzrwc by Stein Magnus Jodal</p>
-
+  <p id="footer">bzrwc by Stein Magnus Jodal</p>
 </body>
-
 </html>
