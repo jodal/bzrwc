@@ -65,6 +65,11 @@ class Revision(object):
     @property
     def files(self):
         for file in self.revtree.list_files():
+            file_type = file[2]
+    
+            if file_type != 'file':
+                continue
+
             file_name = file[0]
             file_id = file[3]
 
