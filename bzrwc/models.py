@@ -27,6 +27,7 @@ class Chart(models.Model):
     CHART_UNIT_WORDS = 'w'
     CHART_UNIT_CHARS = 'c'
     CHART_UNIT_BYTES = 'b'
+
     CHART_UNIT_CHOICES = (
         (CHART_UNIT_REVISIONS, 'Revisions'),
         (CHART_UNIT_LINES, 'Lines'),
@@ -37,7 +38,16 @@ class Chart(models.Model):
         (CHART_UNIT_ADDITIONS, 'Additions'),
         (CHART_UNIT_DELETIONS,'Deletions'),
     )
+
     CHART_UNIT_DICT = dict(CHART_UNIT_CHOICES)
+
+    CHART_UNIT_CONTINUOUS = [
+        CHART_UNIT_REVISIONS,
+        CHART_UNIT_LINES,
+        CHART_UNIT_WORDS,
+        CHART_UNIT_CHARS,
+        CHART_UNIT_BYTES,
+    ]
 
     repository = models.ForeignKey(Repository,
         help_text='What repository to get chart data from.')
