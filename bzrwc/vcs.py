@@ -86,6 +86,12 @@ class Revision(object):
 
         return self._stats
 
+    def get_stats_for(self, files=[]):
+        s = DiffStat()
+        prev_revtree = self._get_revtree(self.prev_id)
+        show_diff_trees(prev_revtree, self.revtree, s, files)
+        return s
+
     def _get_revtree(self, rev_id):
         return self.branch.repository.revision_tree(rev_id)
 
@@ -130,7 +136,7 @@ class DiffStat:
     def __init__(self):
         self.additions = 0
         self.deletions = 0
-        self.changed_files = 0
+        self.files_changed = 0
 
     def write(self, diff_string):
         for line in diff_string.split('\n'):
@@ -139,4 +145,5 @@ class DiffStat:
             if line.startswith('-') and not line.startswith('---'):
                 self.deletions += 1
             elif line.startswith('---'):
-                self.changed_files += 1
+                self.files_changed += 1
+
