@@ -19,16 +19,25 @@ class Repository(models.Model):
         return u'%s: %s' % (self.owner, self.slug)
 
 class Chart(models.Model):
+    CHART_UNIT_REVISIONS = 'r'
+    CHART_UNIT_FILES_CHANGED = 'f'
+    CHART_UNIT_ADDITIONS = 'a'
+    CHART_UNIT_DELETIONS = 'd'
     CHART_UNIT_LINES = 'l'
     CHART_UNIT_WORDS = 'w'
     CHART_UNIT_CHARS = 'c'
     CHART_UNIT_BYTES = 'b'
     CHART_UNIT_CHOICES = (
+        (CHART_UNIT_REVISIONS, 'Revisions'),
         (CHART_UNIT_LINES, 'Lines'),
         (CHART_UNIT_WORDS, 'Words'),
         (CHART_UNIT_CHARS, 'Chars'),
         (CHART_UNIT_BYTES, 'Bytes'),
+        (CHART_UNIT_FILES_CHANGED, 'Files changed'),
+        (CHART_UNIT_ADDITIONS, 'Additions'),
+        (CHART_UNIT_DELETIONS,'Deletions'),
     )
+    CHART_UNIT_DICT = dict(CHART_UNIT_CHOICES)
 
     repository = models.ForeignKey(Repository,
         help_text='What repository to get chart data from.')
@@ -71,9 +80,21 @@ class Chart(models.Model):
     def get_max_num_bytes(self):
         return self.revision_set.all().order_by('-num_bytes')[0].num_bytes
 
+    def get_max_num_revisions(self):
+        return self.revision_set.all().order_by('-num_revisions')[0].num_revisions
+
+    def get_max_num_files_changed(self):
+        return self.revision_set.all().order_by('-num_files_changed')[0].num_files_changed
+
+    def get_max_num_additions(self):
+        return self.revision_set.all().order_by('-num_additions')[0].num_additions
+    
+    def get_max_num_deletions(self):
+        return self.revision_set.all().order_by('-num_deletions')[0].num_deletions
+
     def get_max_num(self, key):
         if key in Chart.CHART_UNIT_DICT:
-            unit = Chart.CHART_UNIT_DICT[key].lower()
+            unit = Chart.CHART_UNIT_DICT[key].lower().replace(' ', '_')
             return eval('self.get_max_num_%s()' % unit)
         else:
             return self.get_max_num_lines()
@@ -83,10 +104,18 @@ class Revision(models.Model):
     revision_id = models.CharField(max_length=100)
     revision_no = models.CharField(max_length=100)
     timestamp = models.DateTimeField()
+
     num_lines = models.IntegerField()
     num_words = models.IntegerField()
     num_chars = models.IntegerField()
     num_bytes = models.IntegerField()
+    num_revisions = models.IntegerField()
+    num_files_changed = models.IntegerField()
+    num_additions = models.IntegerField()
+    num_deletions = models.IntegerField()
+
+    # type = Merge, Commit, ... ?
+    # author = models.CharField(max_length=100)
 
     class Meta:
         ordering = ('timestamp',)
@@ -96,7 +125,7 @@ class Revision(models.Model):
 
     def get_num(self, key):
         if key in Chart.CHART_UNIT_DICT:
-            unit = Chart.CHART_UNIT_DICT[key].lower()
+            unit = Chart.CHART_UNIT_DICT[key].lower().replace(' ', '_')
             return eval('self.num_%s' % unit)
         else:
             return self.num_lines
