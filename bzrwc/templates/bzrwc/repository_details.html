@@ -16,15 +16,19 @@
     <p>No charts found.</p>
   {% else %}
     <p id="units">
-      Unit:
-      {% for key, value in charts.0.CHART_UNIT_CHOICES %}
-        <a href="?unit={{ key }}">{{ value }}</a>
+      <strong>Plot:</strong>
+      {% for key, value in plot_choices %}
+        <a href="?unit={{ unit }}&plot={{ key }}">{{ value }}</a>{% if not forloop.last %},{% endif %}
+      {% endfor %}
+      <strong>Unit:</strong>
+      {% for key, value in unit_choices %}
+        <a href="?unit={{ key }}&plot={{ plot }}">{{ value }}</a>{% if not forloop.last %},{% endif %}
       {% endfor %}
     </p>
 
     <div id="charts">
       {% for chart in charts %}
-        <img id="chart-{{ object.owner }}-{{ object.slug }}-{{ chart.slug }}" class="chart" src="{% url chart object.owner.username,object.slug,chart.slug %}{% if unit %}?unit={{ unit }}{% endif %}" alt="{{ chart.name }}" />
+        <img id="chart-{{ object.owner }}-{{ object.slug }}-{{ chart.slug }}" class="chart" src="{% url chart object.owner.username,object.slug,chart.slug %}?unit={{ unit }}&plot={{ plot }}" alt="{{ chart.name }}" title="{{ chart.name }}"/>
       {% endfor %}
     </div>
   {% endif %}
