@@ -31,12 +31,17 @@ def get_bzr_stats(chart):
 
 def get_revision_stats(rev, filter_function):
     num_lines, num_words, num_chars, num_bytes = 0, 0, 0, 0
+    files = []
 
     for file in filter(filter_function, rev.files):
         num_lines += file.lines
         num_words += file.words
         num_chars += file.chars
         num_bytes += file.chars
+
+        files.append(file.name)
+
+    stats = rev.get_stats_for(files)
 
     return Revision(
         revision_id=rev.id,
@@ -45,4 +50,8 @@ def get_revision_stats(rev, filter_function):
         num_lines=num_lines,
         num_words=num_words,
         num_chars=num_chars,
-        num_bytes=num_bytes)
+        num_bytes=num_bytes,
+        num_files_changed=stats.files_changed,
+        num_additions=stats.additions,
+        num_deletions=stats.deletions,)
+
