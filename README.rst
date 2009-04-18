@@ -4,18 +4,19 @@ bzrwc
 What is bzrwc?
 --------------
 
-bzrwc is a Django_ application which uses the `Google Chart API`_ to graph
+bzrwc is a Django_ application which uses the `Cairo`_ to graph
 various data about Bazaar_ repositories, like lines of code over time.
 
 .. _Django: http://www.djangoproject.com/
-.. _Google Chart API: http://code.google.com/apis/chart/
 .. _Bazaar: http://bazaar-vcs.org/
+.. _Cairo: http://cairographics.org/
 
 
 Credits
 -------
 
 bzrwc was originally created by Stein Magnus Jodal <stein.magnus@jodal.no>.
+Continued delevelopment by Thomas Kongevold Adamcik <thomas@adamcik.no>.
 
 
 License
@@ -32,7 +33,7 @@ As Debian/Ubuntu package names:
 
 * python-django >= 1.0
 * bzrlib (bundled with bzr)
-* python-pygooglechart
+* python-cairo
 
 
 Installation
@@ -61,13 +62,13 @@ TODO
 ----
 
 * Speedups, i.e. more caching.
-* More graphs. Thomas Adamcik got some ideas taken from GitHub.
 
 
 Further documentation
 ---------------------
 
 * http://bazaar-vcs.org/BzrLib
-* http://code.google.com/apis/chart/
+* http://cairographics.org/manual/
+* http://www.tortall.net/mu/wiki/CairoTutorial
 * Use the force, read the source.
 
