@@ -11,15 +11,33 @@ class LineData(list):
 
         total_days = (last_revision - first_revision).days
 
-        for rev in chart.revision_set.all():
-            x = (rev.timestamp - first_revision).days
-            y = rev.get_num(unit)
+        if unit == chart.CHART_UNIT_COMMITS:
+            days = {}
+            max = 0
+            for rev in chart.revision_set.all():
+                x = (rev.timestamp - first_revision).days
 
-            self.append([x,y])
+                if x in days:
+                    days[x] += 1
+                else:
+                    days[x] = 1
+
+                if days[x] > max:
+                    max = days[x]
+
+            self.y_max = max
+            self.extend(days.items())
+
+        else:
+            for rev in chart.revision_set.all():
+                x = (rev.timestamp - first_revision).days
+                y = rev.get_num(unit)
+
+                self.append([x,y])
 
         if pretty:
             self.x_max = pretty_max_number((last_revision - first_revision).days)
-            self.y_max = pretty_max_number(chart.get_max_num(unit))
+            self.y_max = pretty_max_number(getattr(self, 'y_max', 0) or chart.get_max_num(unit))
         else:
             self.x_max = (last_revision - first_revision).days
             self.y_max = chart.get_max_num(unit)
@@ -56,7 +74,7 @@ class ScatterData(LineData):
             day  = rev.timestamp.weekday()
 
             # FIXME
-            if unit != 'r':
+            if unit != 'n':
                 self[day][hour] += rev.get_num(unit)
             else:
                 self[day][hour] += 1
