@@ -14,6 +14,8 @@ class Plot(object):
     width = 450
     height = 150
 
+    background = 'FFFFFF'
+
     show_axes = True
     show_grid = True
     show_labels = True
@@ -61,7 +63,7 @@ class Plot(object):
 
     def _draw_background(self):
         self.canvas.move(0,0)
-        self.canvas.rectangle(self.width, self.height)
+        self.canvas.rectangle(self.width, self.height, fill=self.background)
 
     def _adjust_margins(self, x_labels, y_labels):
         for label in y_labels:
