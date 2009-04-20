@@ -1,4 +1,5 @@
 import os
+import time
 from datetime import datetime
 
 import bzrlib.branch
@@ -21,12 +22,18 @@ class Branch(object):
 
             self.url = '/var/tmp/bzrwc/%s' %  url.split('/')[-2]
 
-            if not os.path.exists(self.url):
-                checkout(branch_location=url, to_location=self.url)
-                print "Imported branch"
+            if _last_updated.get(url, 0) + 60 > time.time():
+                print "Updatet within last minute"
             else:
-                update(self.url)
-                print "Updated branch"
+                if not os.path.exists(self.url):
+                    checkout(branch_location=url, to_location=self.url)
+                    print "Imported branch"
+                else:
+                    update(self.url)
+                    print "Updated branch"
+
+                _last_updated[url] = time.time()
+
         try:
             self.branch = bzrlib.branch.Branch.open(self.url)
         except bzrlib.errors.NotBranchError:
