@@ -1,9 +1,17 @@
 import re
+from time import time
 
 from bzrwc.models import Revision
 from bzrwc.vcs import Branch
 
+MAX_STATS_AGE = 60
+_last_updated = {}
+
 def get_bzr_stats(chart):
+    if _last_updated.get(chart.repository.id, 0) + MAX_STATS_AGE > time():
+        print "Using cache"
+        return
+
     branch = Branch(chart.repository.url)
 
     if not branch:
@@ -18,7 +26,9 @@ def get_bzr_stats(chart):
     know_revisions = set(chart.revision_set.values_list('revision_id', flat=True))
     revisions = []
 
+    start = time()
     for rev in branch.history:
+
         if rev.id in know_revisions:
             continue
 
@@ -26,10 +36,13 @@ def get_bzr_stats(chart):
 
         revisions.append(revision)
 
-        if len(revisions) > 5:
+        if len(revisions) > 20:
+            print '%f revs/second. Currently at %s' % (20 / float(time() - start), rev.no)
             chart.revision_set.add(*revisions)
-            print revisions
+            start = time()
             revisions = []
+
+    _last_updated[chart.repository.id] = time()
 
 def get_revision_stats(rev, filter_function):
     num_lines, num_words, num_chars, num_bytes = 0, 0, 0, 0
