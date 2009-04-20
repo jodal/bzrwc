@@ -1,15 +1,34 @@
+import os
 from datetime import datetime
 
 import bzrlib.branch
 import bzrlib.errors
 from bzrlib.diff import show_diff_trees
+from bzrlib.builtins import cmd_checkout, cmd_remove_tree, cmd_update
+
+checkout = cmd_checkout().run
+remove_tree = cmd_remove_tree().run
+update = cmd_update().run
+
+_last_updated = {}
 
 class Branch(object):
     def __init__(self, url):
         self.url = url
 
+        if not url.startswith('file'):
+            print "Handle remote branch"
+
+            self.url = '/var/tmp/bzrwc/%s' %  url.split('/')[-2]
+
+            if not os.path.exists(self.url):
+                checkout(branch_location=url, to_location=self.url)
+                print "Imported branch"
+            else:
+                update(self.url)
+                print "Updated branch"
         try:
-            self.branch = bzrlib.branch.Branch.open(url)
+            self.branch = bzrlib.branch.Branch.open(self.url)
         except bzrlib.errors.NotBranchError:
             self.branch = None
 
