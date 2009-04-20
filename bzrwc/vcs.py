@@ -1,5 +1,5 @@
 import os
-import time
+from time import time
 from datetime import datetime
 
 import bzrlib.branch
@@ -11,6 +11,8 @@ checkout = cmd_checkout().run
 remove_tree = cmd_remove_tree().run
 update = cmd_update().run
 
+MAX_REMOTE_AGE = 60
+
 _last_updated = {}
 
 class Branch(object):
@@ -20,9 +22,10 @@ class Branch(object):
         if not url.startswith('file'):
             print "Handle remote branch"
 
-            self.url = '/var/tmp/bzrwc/%s' %  url.split('/')[-2]
+            self.url = '/var/tmp/bzrwc/%s' %  url.rstrip('/').replace('://', '-').replace('/', '_')
 
-            if _last_updated.get(url, 0) + 60 > time.time():
+            if _last_updated.get(url, 0) + MAX_REMOTE_AGE > time():
+                # FIXME proper logging
                 print "Updatet within last minute"
             else:
                 if not os.path.exists(self.url):
@@ -32,7 +35,7 @@ class Branch(object):
                     update(self.url)
                     print "Updated branch"
 
-                _last_updated[url] = time.time()
+                _last_updated[url] = time()
 
         try:
             self.branch = bzrlib.branch.Branch.open(self.url)
