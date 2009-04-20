@@ -115,7 +115,6 @@ class Revision(models.Model):
     num_words = models.IntegerField()
     num_chars = models.IntegerField()
     num_bytes = models.IntegerField()
-    num_revisions = models.IntegerField()
     num_files_changed = models.IntegerField()
     num_additions = models.IntegerField()
     num_deletions = models.IntegerField()
