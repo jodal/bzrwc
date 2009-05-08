@@ -8,8 +8,8 @@ MAX_STATS_AGE = 60
 _last_updated = {}
 
 def get_bzr_stats(chart):
-    if _last_updated.get(chart.repository.id, 0) + MAX_STATS_AGE > time():
-        print "Using cache"
+    if _last_updated.get(chart.id, 0) + MAX_STATS_AGE > time():
+        #print "Using cache"
         return
 
     branch = Branch(chart.repository.url)
@@ -42,7 +42,7 @@ def get_bzr_stats(chart):
             start = time()
             revisions = []
 
-    _last_updated[chart.repository.id] = time()
+    _last_updated[chart.id] = time()
 
 def get_revision_stats(rev, filter_function):
     num_lines, num_words, num_chars, num_bytes = 0, 0, 0, 0
@@ -66,7 +66,7 @@ def get_revision_stats(rev, filter_function):
         num_words=num_words,
         num_chars=num_chars,
         num_bytes=num_bytes,
-        num_files_changed=stats.files_changed,
+        num_files_changed=stats.files_changed, # FIXME only number of matching files changed
         num_additions=stats.additions,
         num_deletions=stats.deletions,)
 
