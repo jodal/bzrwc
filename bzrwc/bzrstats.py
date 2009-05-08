@@ -25,13 +25,13 @@ def get_bzr_stats(chart):
     file_filter = lambda file: (re.search(filter_re, file.name) and
         not re.search(exclude_re, file.name))
 
-    know_revisions = set(chart.revision_set.values_list('revision_id', flat=True))
+    known_revisions = set(chart.revision_set.values_list('revision_id', flat=True))
     revisions = []
 
     start = time()
     for rev in branch.history:
 
-        if rev.id in know_revisions:
+        if rev.id in known_revisions:
             continue
 
         revision = get_revision_stats(rev, file_filter)
