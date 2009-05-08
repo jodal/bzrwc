@@ -18,6 +18,7 @@ COLORS = {
 class Plot(object):
     margin = 4
     line_width = 2
+    axes_line_width = 2
 
     width = 450
     height = 150
@@ -100,7 +101,7 @@ class Plot(object):
         self.canvas.line(x_max, 0)
         self.canvas.restore()
 
-        self.canvas.stroke(width=2, color=color, antialias=False)
+        self.canvas.stroke(width=self.axes_line_width, color=color, antialias=False)
 
     def _draw_grid(self, x_spacing, y_spacing, x_max, y_max, color='EEEEEC'):
         self.canvas.scale()
