@@ -108,7 +108,7 @@ class Revision(object):
     def files(self):
         for file in self.revtree.list_files():
             file_type = file[2]
-    
+
             if file_type != 'file':
                 continue
 
@@ -135,6 +135,7 @@ class Revision(object):
         return s
 
     def _get_revtree(self, rev_id):
+        # FIXME use revision_trees ?
         return self.branch.repository.revision_tree(rev_id)
 
 class File(object):
@@ -162,17 +163,15 @@ class File(object):
                 continue
 
             self.lines += 1
-            self.words += len(line.split())
+            self.words += len(line.split(None))
             self.chars += len(line)
 
     def get_lines(self):
         self.revtree.lock_read()
         try:
-            lines = self.revtree.get_file_lines(self.file_id)
+            return self.revtree.get_file_lines(self.file_id)
         finally:
             self.revtree.unlock()
-
-        return lines
 
 class DiffStat:
     def __init__(self):
