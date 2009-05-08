@@ -72,7 +72,7 @@ class Canvas(object):
             self.move(0, 0, relative=True)
         else:
             self.move(0, height, relative=True)
-    
+
     def keep_on_canvas(self, width, height, padding=4):
         x, y = self.context.get_current_point()
 
@@ -137,7 +137,7 @@ class Canvas(object):
     def _get_surface(self, width, height):
         return cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 
-    def _get_context(self, surface, antialias=None):
+    def _get_context(self, surface, antialias=False):
         context = cairo.Context(surface)
         context.set_line_join(cairo.LINE_JOIN_ROUND)
         context.set_line_cap(cairo.LINE_CAP_ROUND)
