@@ -1,3 +1,4 @@
+import logging
 import re
 from time import time
 
@@ -6,6 +7,7 @@ from bzrwc.vcs import Branch
 
 MAX_STATS_AGE = 60
 _last_updated = {}
+logger = logging.getLogger('bzrwc.bzrstats')
 
 def get_bzr_stats(chart):
     if _last_updated.get(chart.id, 0) + MAX_STATS_AGE > time():
@@ -37,7 +39,7 @@ def get_bzr_stats(chart):
         revisions.append(revision)
 
         if len(revisions) > 20:
-            print '%f revs/second. Currently at %s' % (20 / float(time() - start), rev.no)
+            logger.debug('%f revs/second. Currently at %s' % (20 / float(time() - start), rev.no))
             chart.revision_set.add(*revisions)
             start = time()
             revisions = []
