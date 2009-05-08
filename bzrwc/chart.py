@@ -7,6 +7,14 @@ PLOT_CHOICES = (
     ('scatter', 'Punchcard'),
 )
 
+COLORS = {
+    'blue': '4684ee',
+    'red': 'dc3912',
+    'orange': 'ff9900',
+    'green': '008000',
+    'purple': '4942cc',
+}
+
 class Plot(object):
     margin = 4
     line_width = 2
@@ -54,7 +62,7 @@ class Plot(object):
         if self.show_labels:
             self._draw_labels(data.x_labels, data.y_labels, data.x_spacing, data.y_spacing)
 
-        self.draw(data, width=self.line_width, continuous=data.continuous)
+        self.draw(data, width=self.line_width, continuous=data.continuous, color=COLORS['blue'])
 
         if self.show_title:
             self._draw_title(self.title, data.x_max, data.y_max)
@@ -171,6 +179,6 @@ class ScatterPlot(Plot):
 
         for y, row in enumerate(data):
             for x, d in enumerate(row):
-                self.canvas.circle(x+1, y+1, d*0.65)
+                self.canvas.circle(x+1, y+1, d*0.65, fill=color)
 
         self.canvas.restore()
