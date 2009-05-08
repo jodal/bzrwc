@@ -19,26 +19,11 @@ class Branch(object):
     def __init__(self, url):
         self.url = url
 
-        if not url.startswith('file'):
-            print "Handle remote branch"
-
-            self.url = '/var/tmp/bzrwc/%s' %  url.rstrip('/').replace('://', '-').replace('/', '_')
-
-            if _last_updated.get(url, 0) + MAX_REMOTE_AGE > time():
-                # FIXME proper logging
-                print "Updatet within last minute"
-            else:
-                if not os.path.exists(self.url):
-                    checkout(branch_location=url, to_location=self.url)
-                    print "Imported branch"
-                else:
-                    update(self.url)
-                    print "Updated branch"
-
-                _last_updated[url] = time()
+        if self.is_remote(url):
+            url = self.local_checkout(url)
 
         try:
-            self.branch = bzrlib.branch.Branch.open(self.url)
+            self.branch = bzrlib.branch.Branch.open(url)
         except bzrlib.errors.NotBranchError:
             self.branch = None
 
@@ -47,6 +32,34 @@ class Branch(object):
 
     def __bool__(self):
         return bool(getattr(self, 'branch', False))
+
+    def is_remote(self, url):
+        return (not url.startswith('file://'))
+
+    def local_checkout(self, url):
+        local_path = self.local_checkout_path(url)
+
+        if self.needs_update(local_path):
+            self.update_remote(local_path, url)
+
+        return local_path
+
+    def local_checkout_path(self, url):
+        url = url.rstrip('/')
+        url = url.replace('://', '-')
+        url = url.replace('/', '_')
+        return '/var/tmp/bzrwc/%s' %  url
+
+    def needs_update(self, local_path):
+        return (_last_updated.get(local_path, 0) + MAX_REMOTE_AGE > time())
+
+    def update_remote(self, local_path, url):
+        if not os.path.exists(self.url):
+            checkout(branch_location=url, to_location=self.url)
+        else:
+            update(self.url)
+
+        _last_updated[local_path] = time()
 
     @property
     def history(self):
