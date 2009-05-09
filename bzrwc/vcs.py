@@ -64,9 +64,10 @@ class Branch(object):
     @property
     def history(self):
         prev_id = None
-        for rev_id in self.branch.revision_history():
-            yield Revision(self.branch, rev_id, prev_id)
-            prev_id = rev_id
+        if self.branch is not None:
+            for rev_id in self.branch.revision_history():
+                yield Revision(self.branch, rev_id, prev_id)
+                prev_id = rev_id
 
 class Revision(object):
     def __init__(self, branch, rev_id, prev_id):
