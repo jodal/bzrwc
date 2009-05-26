@@ -52,7 +52,7 @@ class LineData(list):
             self.x_labels.append((first_revision + datetime.timedelta(days=i)).date())
 
 class ScatterData(LineData):
-    def __init__(self, chart, unit=None):
+    def __init__(self, chart, unit=None, pretty=True):
         self.continuous = unit in chart.CHART_UNIT_CONTINUOUS
 
         self.x_max = 25
