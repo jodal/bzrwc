@@ -175,6 +175,14 @@ class SparkPlot(Plot):
 
     antialias = 'none'
 
+    def draw(self, data, color='3465A4', width=2, continuous=True):
+        super(SparkPlot, self).draw(data, color, width, continuous)
+
+        if not continuous:
+            self.canvas.move(0, self.height-self.bottom)
+            self.canvas.line(self.width, 0, relative=True)
+            self.canvas.stroke(width=self.bottom, color=self.background)
+
 class ScatterPlot(Plot):
     def draw(self, data, color='3465A4', width=2, continuous=True):
         self.canvas.scale()
