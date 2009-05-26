@@ -13,6 +13,7 @@ COLORS = {
     'orange': 'ff9900',
     'green': '008000',
     'purple': '4942cc',
+    'grey': 'eeeecc',
 }
 
 class Plot(object):
