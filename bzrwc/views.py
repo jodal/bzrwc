@@ -53,10 +53,12 @@ def chart(request, username, repository_slug, chart_slug):
 
     response = HttpResponse(mimetype='image/png')
 
+    pretty = plot_type != 'spark'
+
     if plot_type == 'scatter':
-        data = ScatterData(chart, unit)
+        data = ScatterData(chart, unit, pretty=pretty)
     else:
-        data = LineData(chart, unit)
+        data = LineData(chart, unit, pretty=pretty)
 
     title = '%s - %s' % (chart.name, Chart.CHART_UNIT_DICT[unit])
 
