@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 
 from django.contrib.auth.models import User
 
@@ -97,6 +97,15 @@ class Chart(models.Model):
 
     def get_max_num_deletions(self):
         return self.revision_set.all().order_by('-num_deletions')[0].num_deletions
+
+    def get_max_num_commits(self):
+        cursor = connection.cursor()
+        cursor.execute('''SELECT COUNT(*) as count, date_trunc('day', timestamp) as date
+            FROM bzrwc_revision WHERE chart_id = %s GROUP BY date ORDER BY count DESC LIMIT 1''', [self.id])
+
+        if cursor.rowcount:
+            return cursor.fetchone()[0]
+        return 0
 
     def get_max_num(self, key):
         if key in Chart.CHART_UNIT_DICT:
