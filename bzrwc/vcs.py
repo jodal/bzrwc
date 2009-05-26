@@ -11,7 +11,7 @@ checkout = cmd_checkout().run
 remove_tree = cmd_remove_tree().run
 update = cmd_update().run
 
-MAX_REMOTE_AGE = 60
+MAX_REMOTE_AGE = 60 * 3
 
 _last_updated = {}
 

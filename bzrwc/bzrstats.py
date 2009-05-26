@@ -5,7 +5,7 @@ from time import time
 from bzrwc.models import Revision
 from bzrwc.vcs import Branch
 
-MAX_STATS_AGE = 60
+MAX_STATS_AGE = 60*3
 _last_updated = {}
 
 logger = logging.getLogger('bzrwc.bzrstats')
